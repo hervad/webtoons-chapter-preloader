@@ -3,6 +3,8 @@
 A small userscript that force-loads every image in a [Webtoons](https://www.webtoons.com) chapter as soon as the page opens, instead of lazy-loading them on scroll. The result is no more blank-image stutter while reading.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Greasyfork version](https://img.shields.io/greasyfork/v/575967.svg)](https://greasyfork.org/en/scripts/575967-webtoons-chapter-preloader)
+[![Greasyfork installs](https://img.shields.io/greasyfork/dt/575967.svg)](https://greasyfork.org/en/scripts/575967-webtoons-chapter-preloader)
 
 ## What it does
 
@@ -14,7 +16,7 @@ It also handles the in-place navigation Webtoons uses between chapters: when the
 
 **Recommended (with auto-updates):**
 
-Install from Greasyfork: *(link goes here once published)*
+[Install from Greasyfork](https://greasyfork.org/en/scripts/575967-webtoons-chapter-preloader) — open the page in a browser that has a userscript manager installed, then click the green **Install this script** button.
 
 **Manual:**
 

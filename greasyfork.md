@@ -13,6 +13,7 @@ It works in Tampermonkey, Violentmonkey and Greasemonkey.
 - **Downloads start early.** The script runs as soon as the page starts loading and asks for each image the moment the browser reads it, instead of waiting for the rest of the page. In a test in Firefox, all 126 images of a chapter had finished downloading before the page itself was done loading.
 - **Panels are ready before you reach them.** Browsers only prepare (decode) images that are close to the screen, so a fast scroll can show an image blank for a moment even when it's already downloaded. The script prepares the panels up to three screens ahead of where you're reading. It does this a few at a time, so it doesn't fill your memory with the whole chapter.
 - **The top of the chapter comes first.** The first few panels are downloaded with high priority.
+- **Screen readers** hear the final result once, not every count.
 - **Failed images don't leave you hanging.** If an image can't be loaded, the bubble says so (`⚠ Preloaded 125 / 126 images (1 failed)`) instead of waiting forever.
 
 ## Data usage
@@ -25,7 +26,7 @@ The script uses `@grant none`: it has no userscript-manager permissions beyond r
 
 ## Compatibility
 
-- Desktop site only: `www.webtoons.com/*/viewer*`. The mobile site (`m.webtoons.com`) builds its pages differently and isn't supported yet.
+- Desktop site (`www.webtoons.com`) and mobile site (`m.webtoons.com`). On the mobile site, Webtoons shows only part of some chapters (the rest is in its app); the script preloads what the page shows.
 - If Webtoons changes how its reader is built, the script may silently stop working. Please report it if you notice.
 
 ## Also try: Webtoons Dark Mode

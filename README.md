@@ -12,6 +12,20 @@ Webtoons.com lazy-loads chapter images as you scroll, which produces a brief bla
 
 ## Install
 
+There are two ways to get the preloader. Both run the same code; use one or the other (if both are installed, only one runs on a page).
+
+### Browser extension: Toonlight Preloader (easiest)
+
+One click, no userscript manager, and no permissions beyond WEBTOON's chapter pages.
+
+- **Chrome, Brave, Opera, Vivaldi:** coming soon to the Chrome Web Store.
+- **Edge:** coming soon to Edge Add-ons.
+- **Firefox (also Firefox for Android):** coming soon to Firefox Add-ons.
+
+Until the listings are live, use the userscript below. The extension updates through the store.
+
+### Userscript
+
 **Recommended (with auto-updates):**
 
 [Install from Greasy Fork](https://greasyfork.org/en/scripts/575967-webtoons-chapter-preloader) — open the page in a browser that has a userscript manager installed, then click the green **Install this script** button.
@@ -34,34 +48,44 @@ The script runs at `document-start`. While the page is still being parsed, a sho
 
 Downloading isn't the whole story: Firefox only decodes images within about one screen of the viewport, so a fast scroll can still show an already-downloaded image blank for a moment. An `IntersectionObserver` calls `img.decode()` on images up to three screens below the viewport. It's a rolling window — decoded images cost a few MB each, so the whole chapter is never decoded at once.
 
-A small status bubble in the bottom-right corner shows preload progress and fades out once everything's loaded. If any image fails to load, the bubble says how many (e.g. `⚠ Preloaded 49 / 50 images (1 failed)`) instead of waiting forever.
+A small status bubble in the bottom-right corner (top-right on the mobile site, clear of its bottom toolbar) shows preload progress and fades out once everything's loaded. If any image fails to load, the bubble says how many (e.g. `⚠ Preloaded 49 / 50 images (1 failed)`) instead of waiting forever.
 
-The script uses `@grant none`, so it has no userscript-manager privileges beyond plain DOM access — no network APIs, no storage, nothing it could exfiltrate even in principle.
+On the mobile site (`m.webtoons.com`, where phones are sent) there is no `data-url`: the viewer script builds the `<img>`s from an inline `var imageList = [...]` and keeps each URL in jQuery's private data. So the script reads that list from the inline script's text and builds each panel's URL the way the viewer does (`?type=q70`, plus a `500w` / `700w` `srcset`, so the browser picks the size it would have picked anyway). As a safety check it first compares its URLs with the ones the viewer set on the panels it has already shown; if they differ, it does nothing, since a mismatch would download every image twice. It fills only the `<img>`s the page shows: mobile web shows part of some chapters and the rest in the app, and that part is never downloaded.
+
+The bubble's final result is also announced to screen readers through a visually hidden `role="status"` element; the running count isn't, so it doesn't talk over the page.
+
+The script uses `@grant none`, so it has no userscript-manager privileges beyond plain DOM access — no network APIs, no storage, nothing it could exfiltrate even in principle. The extension is the same file, byte for byte, as a content script with no permissions; see [PRIVACY.md](PRIVACY.md).
+
+With both the userscript and the extension installed, the first copy to start claims the page by setting `data-wt-preloader` on `<html>` (the one part of the page both can see), and the other copy stops. A copy that starts before `<html>` exists keeps preloading (setting the same `src` twice is harmless) and checks the claim again at `DOMContentLoaded`, before it starts decoding or shows the bubble.
 
 ## Configuration
 
 The settings are constants at the top of the script:
 
 ```js
-const IMG_SELECTOR  = '#_imageList img';   // change if Webtoons reworks the viewer markup
-const STATUS_ID     = '__wt_preloader_status'; // don't rename: Webtoons Dark Mode recognises the bubble by this ID
-const HIGH_PRIORITY = 3;                    // how many top-of-chapter images get fetchPriority="high"
-const DECODE_AHEAD  = '300%';               // pre-decode images this many viewport heights below the screen
+const IMG_SELECTOR   = '#_imageList img';              // change if Webtoons reworks the viewer markup
+const M_IMG_SELECTOR = '.viewer_img img._checkVisible'; // the same, for the m.webtoons.com reader
+const STATUS_ID      = '__wt_preloader_status';         // don't rename: Webtoons Dark Mode recognises the bubble by this ID
+const HIGH_PRIORITY  = 3;                               // how many top-of-chapter images get fetchPriority="high"
+const DECODE_AHEAD   = '300%';                          // pre-decode images this many viewport heights below the screen
+const MOBILE_WAIT_MS = 15000;                           // give up on m.webtoons.com if the viewer shows no panel by then
 ```
 
-If you don't want the progress bubble, delete the `trackProgress(imgs)` call in `finish()`.
+If you don't want the progress bubble, delete the `trackProgress(imgs)` call in `watch()`.
 
 ## Compatibility
 
-- Tampermonkey, Violentmonkey, Greasemonkey
+- Userscript: Tampermonkey, Violentmonkey, Greasemonkey
+- Extension: Chrome and Edge (tested in 155), Firefox 142 or newer, also Firefox for Android (tested in 157)
 - Chromium browsers: Chrome, Edge, Brave, Opera, Vivaldi
 - Firefox (stable + ESR)
-- Desktop only; `m.webtoons.com` is not matched (see Known Issues)
+- Desktop site (`www.webtoons.com`) and mobile site (`m.webtoons.com`), where phones and tablets are sent
 
 ## Known issues
 
-- **Mobile site not covered.** The `@match` only targets `www.webtoons.com/*/viewer*`. `m.webtoons.com` builds its `<img>` elements from a JavaScript image list at runtime (there is no `data-url` in its HTML), so supporting it needs a separate code path, not just another `@match` line.
-- **Data usage.** The whole chapter is downloaded as soon as the page opens — typically 10–20 MB, about 3–4× what the site loads up front on its own. If you open a chapter and leave after a few panels, the rest was downloaded for nothing. On a metered or slow connection you may want to disable the script.
+- **Mobile site shows part of some chapters.** On `m.webtoons.com` the site itself shows only part of some chapters and points to its app for the rest (for example 62 of 124 panels); the script preloads what the page shows.
+- **Mobile URL scheme.** On `m.webtoons.com` the script builds image URLs the way the site's viewer does. If the site changes that, the safety check makes the script stand down on mobile (the console says `mobile image URLs changed`) until it's updated; please open an issue.
+- **Data usage.** The whole chapter is downloaded as soon as the page opens — typically 10–20 MB, about 3–4× what the site loads up front on its own. If you open a chapter and leave after a few panels, the rest was downloaded for nothing. On a metered or slow connection you may want to disable the script; on a phone it's less, because the mobile site shows part of the chapter and serves smaller images (in a test, 62 panels: 3.3 MB on a high-density screen, 1.9 MB on a 1× screen).
 - **Selector drift.** If Webtoons changes the `#_imageList` ID or the `data-url` attribute name, the script will silently do nothing until `IMG_SELECTOR` is updated. Please open an issue if you notice this.
 
 ## Also by the author
@@ -73,6 +97,8 @@ If you don't want the progress bubble, delete the `trackProgress(imgs)` call in 
 Issues and pull requests welcome. For bug reports, including a chapter URL where the issue reproduces is helpful (the markup occasionally varies by genre/locale).
 
 The Greasy Fork page text lives in [`greasyfork.md`](greasyfork.md); its one-line summary is the script's `@description`. Changes are listed in [`CHANGELOG.md`](CHANGELOG.md).
+
+The extension is built from the userscript with `node tools/build-extension.mjs` (Node 22+, no dependencies): it writes `dist/chrome/` (Chrome and Edge), `dist/firefox/` and a zip of each. [`extension/STORE.md`](extension/STORE.md) has the store listings and the publishing steps; see also [CONTRIBUTING.md](CONTRIBUTING.md).
 
 To test a change, open your userscript manager's dashboard, create a new script, select all of the template (Ctrl+A) and paste the whole file over it. The manager reads only the first `// ==UserScript==` header, so pasting below the template leaves the template's `@match` in charge and the script never runs on chapter pages. Disable any installed copy of the script while testing.
 

@@ -1,0 +1,16 @@
+name: Idea or request
+description: Suggest a change to how chapters load, or a new option.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like?
+      description: Describe the change, and the page it's about.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why?
+      description: What it would make faster or easier.

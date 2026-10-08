@@ -1,0 +1,61 @@
+name: Something doesn't load
+description: Panels still load on scroll, the bubble is stuck or wrong, or a chapter looks broken.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! Webtoons changes its reader now and then, which can stop the preloader from finding the images; these are usually quick fixes.
+        Tip: turn the preloader off (in your userscript manager, or on your browser's extensions page) and reload. If the problem is still there, it's the site itself.
+  - type: input
+    id: url
+    attributes:
+      label: Chapter URL
+      description: The address of the chapter where it happens.
+      placeholder: https://www.webtoons.com/en/.../viewer?title_no=...&episode_no=...
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happens?
+      description: What you see (for example, what the bubble says), and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot
+      description: Drag an image here. It helps a lot.
+  - type: dropdown
+    id: how
+    attributes:
+      label: How do you use it?
+      options:
+        - Userscript in Tampermonkey
+        - Userscript in Violentmonkey
+        - Userscript in Greasemonkey
+        - Toonlight Preloader browser extension
+        - Something else
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+      placeholder: Chrome 155, Firefox 157, Edge 155, …
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Preloader version
+      description: Shown in your userscript manager's dashboard, or on your browser's extensions page for Toonlight Preloader.
+      placeholder: 1.2.0
+  - type: checkboxes
+    id: others
+    attributes:
+      label: Other scripts
+      options:
+        - label: I also use Webtoons Dark Mode / Toonlight
+        - label: I use other userscripts or extensions on webtoons.com (please name them above)

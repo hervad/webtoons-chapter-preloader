@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-10-08
+
+### Added
+- **Browser extension: Toonlight Preloader** for Chrome, Edge and Firefox (also Firefox for Android), coming to the stores. It's this same script, packaged byte for byte by `node tools/build-extension.mjs`, with no permissions beyond WEBTOON's chapter pages. Store guide in `extension/STORE.md`, privacy policy in `PRIVACY.md`.
+- **Mobile site (`m.webtoons.com`).** The mobile reader has no `data-url`, so the script reads the chapter's image list from the page's inline script and builds each panel's URL and `srcset` the way the site's viewer does, then preloads every panel the page shows. A safety check compares its URLs with the ones the viewer set on the first panels and does nothing if they differ, so a site change can't make images download twice.
+- **Screen readers** hear the final result ("Preloaded 124 images", or how many failed) from a visually hidden `role="status"` element; the running count stays silent.
+- **One copy per page:** with both the userscript and the extension installed, the first to start claims the page (`html[data-wt-preloader]`) and the other stops, instead of both decoding and tracking the bubble. A copy injected before `<html>` exists claims at `DOMContentLoaded`.
+- Community files: issue forms, pull request template, contributing guide, security policy, accessibility statement, code of conduct.
+
+### Changed
+- On the mobile site the bubble sits top-right, below the header, so it doesn't cover the reader's bottom toolbar.
+- The bubble's text changes through text nodes instead of replacing its children, so it no longer produces a `childList` mutation per image (Webtoons Dark Mode filtered those; other scripts' observers no longer see them either).
+
 ## [1.1.0] - 2026-10-08
 
 ### Added

@@ -39,6 +39,15 @@ body:
         - Something else
     validations:
       required: true
+  - type: dropdown
+    id: site
+    attributes:
+      label: Which site?
+      options:
+        - Desktop site (www.webtoons.com)
+        - Mobile site (m.webtoons.com, on a phone)
+    validations:
+      required: true
   - type: input
     id: browser
     attributes:
@@ -51,7 +60,7 @@ body:
     attributes:
       label: Preloader version
       description: Shown in your userscript manager's dashboard, or on your browser's extensions page for Toonlight Preloader.
-      placeholder: 1.2.0
+      placeholder: 1.3.0
   - type: checkboxes
     id: others
     attributes:

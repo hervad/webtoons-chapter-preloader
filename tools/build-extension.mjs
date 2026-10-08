@@ -24,7 +24,7 @@ const SCRIPT = 'webtoons-preloader.user.js';
 const NAME = 'Toonlight Preloader for WEBTOON';
 const SLUG = 'toonlight-preloader';
 // Chrome allows 132 characters.
-const DESCRIPTION = 'Loads the whole WEBTOON chapter as it opens, so panels are never blank while you scroll. Not affiliated with NAVER WEBTOON.';
+const DESCRIPTION = 'Each WEBTOON chapter ready as it opens: no waiting for panels as you scroll, on desktop or phone. Not affiliated with NAVER WEBTOON.';
 // Fixed for good once the add-on is on AMO: Firefox identifies it by this ID.
 const GECKO_ID = 'toonlight-preloader@hervad';
 

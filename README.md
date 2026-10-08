@@ -1,6 +1,6 @@
 # Webtoons Chapter Preloader
 
-A small userscript that force-loads every image in a [Webtoons](https://www.webtoons.com) chapter as soon as the page opens, instead of lazy-loading them on scroll. The result is no more blank-image stutter while reading.
+Loads every panel of a [WEBTOON](https://www.webtoons.com) chapter as soon as the page opens, instead of one at a time as you scroll, so you can read without waiting for panels to fill in. On desktop and on your phone, as a userscript or as the **Toonlight Preloader** browser extension.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Greasy Fork version](https://img.shields.io/greasyfork/v/575967.svg)](https://greasyfork.org/en/scripts/575967-webtoons-chapter-preloader)
@@ -8,7 +8,19 @@ A small userscript that force-loads every image in a [Webtoons](https://www.webt
 
 ## What it does
 
-Webtoons.com lazy-loads chapter images as you scroll, which produces a brief blank-image flash every time a new panel comes into view — especially noticeable on slower connections or long chapters. This script asks the browser to fetch the entire chapter while the page is still opening, and decodes images a few screens ahead of where you're reading. By the time you scroll, every image is already in cache and the next few are ready to paint.
+Webtoons.com lazy-loads chapter images as you scroll, which produces a brief blank-image flash every time a new panel comes into view — especially noticeable on slower connections or long chapters. This script asks the browser to fetch the entire chapter while the page is still opening, top of the chapter first, and decodes images a few screens ahead of where you're reading. By the time you scroll, the panels are already downloaded and the next few are ready to paint. It never scrolls the page itself and has nothing to configure.
+
+![Two grids of 124 squares, one per panel of a chapter, measured right after it opened: without the preloader 2 are downloaded, with it all 124](docs/screenshots/compare.jpg)
+
+Measured on a 124-panel chapter (Tower of God S3 Ep. 100) in Chrome, Edge and Firefox; the method is in [`extension/STORE.md`](extension/STORE.md):
+
+- **Fast connection:** all 124 panels were downloaded before the page itself had finished loading. Without the preloader, 2 had been.
+- **Slow connection** (9 Mbit/s), reading one screen per second: on a computer, screens with a blank panel went from 3 to 0; on a phone, blank panels went from 11 to 5.
+- **Fast scrolling** on a 4G-like connection (computer): screens with a blank panel went from 21 to 0.
+
+![Bar chart, lower is better: computer fast scrolling 21 screens with a blank panel without, 0 with; computer normal reading 3 without, 0 with; phone normal reading 11 blank panels without, 5 with](docs/screenshots/speed.jpg)
+
+<p align="center"><img src="docs/screenshots/mobile.jpg" width="60%" alt="Store image: the mobile reader on a phone, with the bubble under the header saying Preloaded 62 images, beside the caption Works on your phone too"></p>
 
 ## Install
 
@@ -75,11 +87,9 @@ If you don't want the progress bubble, delete the `trackProgress(imgs)` call in 
 
 ## Compatibility
 
-- Userscript: Tampermonkey, Violentmonkey, Greasemonkey
-- Extension: Chrome and Edge (tested in 155), Firefox 142 or newer, also Firefox for Android (tested in 157)
-- Chromium browsers: Chrome, Edge, Brave, Opera, Vivaldi
-- Firefox (stable + ESR)
-- Desktop site (`www.webtoons.com`) and mobile site (`m.webtoons.com`), where phones and tablets are sent
+- Userscript: Tampermonkey, Violentmonkey, Greasemonkey, in Chrome, Edge, Brave, Opera, Vivaldi, Firefox (stable and ESR) and Firefox for Android
+- Extension: Chrome and Edge (tested in 155), Firefox 142 or newer including Firefox for Android (tested in 157, and on a Pixel 9a)
+- Desktop site (`www.webtoons.com`) and mobile site (`m.webtoons.com`, where phones are sent)
 
 ## Known issues
 

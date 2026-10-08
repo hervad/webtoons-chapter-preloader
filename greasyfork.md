@@ -2,9 +2,9 @@ Webtoons.com lazy-loads chapter images as you scroll, so every time a new panel 
 
 ## Getting started
 
-Click **Install this script** above, then open any chapter on webtoons.com. A small bubble in the bottom-right corner shows the progress (`Preloading 37 / 126…`, then `✓ Preloaded 126 images`) and fades out. Updates arrive automatically through Greasy Fork.
+Click **Install this script** above, then open any chapter on webtoons.com. A small bubble in the bottom-right corner (top-right on the mobile site) shows the progress (`Preloading 37 / 126…`, then `✓ Preloaded 126 images`) and fades out. Updates arrive automatically through Greasy Fork.
 
-It works in Tampermonkey, Violentmonkey and Greasemonkey.
+It works in Tampermonkey, Violentmonkey and Greasemonkey, on the desktop site and on your phone (Firefox for Android with Violentmonkey or Tampermonkey).
 
 **Chrome, Edge and other Chromium browsers:** the browser needs an extra permission before any userscript can run. Open `chrome://extensions`, click **Details** on your userscript manager, and turn on **Allow User Scripts**. On Chrome versions before 138, turn on **Developer mode** (top-right of `chrome://extensions`) instead.
 
@@ -13,12 +13,13 @@ It works in Tampermonkey, Violentmonkey and Greasemonkey.
 - **Downloads start early.** The script runs as soon as the page starts loading and asks for each image the moment the browser reads it, instead of waiting for the rest of the page. In a test in Firefox, all 126 images of a chapter had finished downloading before the page itself was done loading.
 - **Panels are ready before you reach them.** Browsers only prepare (decode) images that are close to the screen, so a fast scroll can show an image blank for a moment even when it's already downloaded. The script prepares the panels up to three screens ahead of where you're reading. It does this a few at a time, so it doesn't fill your memory with the whole chapter.
 - **The top of the chapter comes first.** The first few panels are downloaded with high priority.
+- **Your page stays put.** The script never scrolls the page to make images load, and there's nothing to set up.
 - **Screen readers** hear the final result once, not every count.
 - **Failed images don't leave you hanging.** If an image can't be loaded, the bubble says so (`⚠ Preloaded 125 / 126 images (1 failed)`) instead of waiting forever.
 
 ## Data usage
 
-The whole chapter is downloaded as soon as you open it, typically 10–20 MB, about 3–4 times what the site loads up front on its own. If you open a chapter and leave after a few panels, the rest was downloaded for nothing. On a metered or slow connection you may want to turn the script off.
+The whole chapter is downloaded as soon as you open it, typically 10–20 MB, about 3–4 times what the site loads up front on its own. If you open a chapter and leave after a few panels, the rest was downloaded for nothing. On a phone it's less, usually 2–3 MB, because the mobile site shows part of the chapter and serves smaller images. On a metered connection you may want to turn the script off.
 
 ## Privacy
 

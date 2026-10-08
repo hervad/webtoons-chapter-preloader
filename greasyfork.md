@@ -1,0 +1,41 @@
+Webtoons.com lazy-loads chapter images as you scroll, so every time a new panel comes into view there's a brief blank flash, especially on slower connections or long chapters. This script downloads the whole chapter while the page is still opening, and gets the next few panels ready to paint before you reach them. By the time you scroll, there's nothing left to wait for.
+
+## Getting started
+
+Click **Install this script** above, then open any chapter on webtoons.com. A small bubble in the bottom-right corner shows the progress (`Preloading 37 / 126…`, then `✓ Preloaded 126 images`) and fades out. Updates arrive automatically through Greasy Fork.
+
+It works in Tampermonkey, Violentmonkey and Greasemonkey.
+
+**Chrome, Edge and other Chromium browsers:** the browser needs an extra permission before any userscript can run. Open `chrome://extensions`, click **Details** on your userscript manager, and turn on **Allow User Scripts**. On Chrome versions before 138, turn on **Developer mode** (top-right of `chrome://extensions`) instead.
+
+## How it works
+
+- **Downloads start early.** The script runs as soon as the page starts loading and asks for each image the moment the browser reads it, instead of waiting for the rest of the page. In a test in Firefox, all 126 images of a chapter had finished downloading before the page itself was done loading.
+- **Panels are ready before you reach them.** Browsers only prepare (decode) images that are close to the screen, so a fast scroll can show an image blank for a moment even when it's already downloaded. The script prepares the panels up to three screens ahead of where you're reading. It does this a few at a time, so it doesn't fill your memory with the whole chapter.
+- **The top of the chapter comes first.** The first few panels are downloaded with high priority.
+- **Failed images don't leave you hanging.** If an image can't be loaded, the bubble says so (`⚠ Preloaded 125 / 126 images (1 failed)`) instead of waiting forever.
+
+## Data usage
+
+The whole chapter is downloaded as soon as you open it, typically 10–20 MB, about 3–4 times what the site loads up front on its own. If you open a chapter and leave after a few panels, the rest was downloaded for nothing. On a metered or slow connection you may want to turn the script off.
+
+## Privacy
+
+The script uses `@grant none`: it has no userscript-manager permissions beyond reading and changing the page. It stores nothing, makes no requests of its own and sends no data anywhere. The images it loads are the same ones the page would load as you scroll, from Webtoons' own image server.
+
+## Compatibility
+
+- Desktop site only: `www.webtoons.com/*/viewer*`. The mobile site (`m.webtoons.com`) builds its pages differently and isn't supported yet.
+- If Webtoons changes how its reader is built, the script may silently stop working. Please report it if you notice.
+
+## Also try: Webtoons Dark Mode
+
+[**Webtoons Dark Mode**](https://greasyfork.org/scripts/577859) is a dark theme for the whole site that keeps the comic's colours exactly as the artist drew them. Unlike dark-mode extensions that invert the page, it never filters or recolours the panels: skin tones stay skin tones. It covers the header and menus, series pages, the reader, comments and popups, and adds a night-reading dim for the panels.
+
+The two scripts are made to work together and are tested side by side. Prefer an extension? The same theme is available as **Toonlight** for [Chrome, Brave and Opera](https://chromewebstore.google.com/detail/toonlight-dark-mode-for-w/jefblpkbipgmpefdnninpnofkjckpafn) and [Edge](https://microsoftedge.microsoft.com/addons/detail/toonlight-dark-mode-for-/iheadalpoiialennkmndleakobiilcfm).
+
+## Source and issues
+
+Source code and changelog: [github.com/hervad/webtoons-chapter-preloader](https://github.com/hervad/webtoons-chapter-preloader). Bug reports are welcome; please include the chapter URL where the problem happens.
+
+License: MIT

@@ -5,6 +5,8 @@ Loads every panel of a [WEBTOON](https://www.webtoons.com) chapter as soon as th
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Greasy Fork version](https://img.shields.io/greasyfork/v/575967.svg)](https://greasyfork.org/en/scripts/575967-webtoons-chapter-preloader)
 [![Greasy Fork installs](https://img.shields.io/greasyfork/dt/575967.svg)](https://greasyfork.org/en/scripts/575967-webtoons-chapter-preloader)
+[![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Toonlight%20Preloader-1a73e8)](https://chromewebstore.google.com/detail/toonlight-preloader-for-w/kanadpglihpekgidpopkpblcheoinekh)
+[![Edge Add-ons](https://img.shields.io/badge/Edge%20Add--ons-Toonlight%20Preloader-0078d7)](https://microsoftedge.microsoft.com/addons/detail/toonlight-preloader-for-w/mpgabnfjnfleojaokcojabpcpfnnpgfd)
 
 ## What it does
 
@@ -54,11 +56,11 @@ There are two ways to get the preloader. Both run the same code; use one or the 
 
 One click, no userscript manager, and no permissions beyond WEBTOON's chapter pages.
 
-- **Chrome, Brave, Opera, Vivaldi:** coming soon to the Chrome Web Store.
-- **Edge:** coming soon to Edge Add-ons.
-- **Firefox (also Firefox for Android):** coming soon to Firefox Add-ons.
+- **Chrome, Brave, Opera, Vivaldi:** [Toonlight Preloader on the Chrome Web Store](https://chromewebstore.google.com/detail/toonlight-preloader-for-w/kanadpglihpekgidpopkpblcheoinekh)
+- **Edge:** [Toonlight Preloader on Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/toonlight-preloader-for-w/mpgabnfjnfleojaokcojabpcpfnnpgfd)
+- **Firefox (also Firefox for Android):** in review on Firefox Add-ons; until it's listed, use the userscript below.
 
-Until the listings are live, use the userscript below. The extension updates through the store.
+The extension updates through the store.
 
 ### Userscript
 

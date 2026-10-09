@@ -1,5 +1,7 @@
 Webtoons.com lazy-loads chapter images as you scroll, so every time a new panel comes into view there's a brief blank flash, especially on slower connections or long chapters. This script downloads the whole chapter while the page is still opening, and gets the next few panels ready to paint before you reach them. By the time you scroll, there's nothing left to wait for.
 
+> **No userscript manager?** The same preloader is also a browser extension, **Toonlight Preloader**: one click to install, nothing to set up. Get it for [Chrome, Brave and Opera](https://chromewebstore.google.com/detail/toonlight-preloader-for-w/kanadpglihpekgidpopkpblcheoinekh) or [Edge](https://microsoftedge.microsoft.com/addons/detail/toonlight-preloader-for-w/mpgabnfjnfleojaokcojabpcpfnnpgfd). Use either the script or the extension, not both.
+
 ## Getting started
 
 Click **Install this script** above, then open any chapter on webtoons.com. A small bubble in the bottom-right corner (top-right on the mobile site) shows the progress (`Preloading 37 / 126…`, then `✓ Preloaded 126 images`) and fades out. Updates arrive automatically through Greasy Fork.

@@ -72,19 +72,20 @@ Why the description reads this way:
   - Fast connection: with the extension all 124 panels were downloaded while the page was still loading; without it, 2 of 124 had their image 12 s after opening.
   - Slow link (a local proxy capped at 9 Mbit/s, so the servers' own priorities apply), reading one screen per second: computer, 3 screens with a blank panel without, 0 with; phone (Pixel 9a profile), 11 blank panels without, 5 with.
   - Fast flick (a screen every 0.3 s, Chrome's Fast 4G profile), computer: 21 screens with a blank panel without, 0 with.
+  - Jump (screenshot 5): 8 s after opening, jump to panel 62 of 124 on the 9 Mbit/s link, screen read 30 ms later, Toonlight on in both: without, both panels on screen blank; with, both painted. At 150 ms the site had filled them too, so the image shows the first moment after the jump, not a long wait; on a 4 Mbit/s link one panel was still blank at 150 ms.
   - Size: 10.5 MB on a computer; on the phone 3.3 MB (high-density screen) or 1.9 MB (1× screen), each image requested once.
   - The test tools are in the local `.claude/tools/` (`blank-scroll.mjs`, `slow-proxy.mjs`, `m-test.mjs`, `bytes.mjs`). Re-measure before changing a number.
 
 **Images** (build output, not committed; `dist/store/`, all 24-bit RGB PNG except the Edge logo):
 
-- `1-compare.png`, `2-speed.png`, `3-loading.png`, `4-mobile.png`, `5-done.png`: 1280 × 800 screenshots, in this order (Chrome shows at most five and leads with the first). 1 and 2 are charts of the measured results (2 uses one shared scale; its colours pass the colour-blind checks); 3 and 5 are real reader screenshots taken at 2× and downscaled, with the bubble magnified from the 2× pixels; 4 is a real phone screenshot of the mobile reader, cropped above the site's own app banner.
+- `1-compare.png`, `2-speed.png`, `3-loading.png`, `4-mobile.png`, `5-jump.png`: 1280 × 800 screenshots, in this order (Chrome shows at most five and leads with the first). 1 and 2 are charts of the measured results (2 uses one shared scale; its colours pass the colour-blind checks); 3 is a real reader screenshot taken at 2× and downscaled, with the bubble magnified from the 2× pixels; 4 is a real phone screenshot of the mobile reader, cropped above the site's own app banner; 5 is two real 2× captures of the same moment side by side (see the measurements below).
 - `promo-tile-440x280.png`: the small promo tile (Chrome requires it; Edge optional).
 - `promo-large-1400x560.png`: Chrome's marquee / Edge's large promo tile (both optional, used only if the store features the item).
 - Store icon: `extension/icons/icon-128.png` (Chrome, AMO); Edge wants `store-logo-300.png` (300 × 300).
 
 The README's smaller copies (`compare.jpg`, `speed.jpg`, `mobile.jpg`) are committed in `docs/screenshots/`; the store-size images are build output and stay out of git.
 
-To redraw: `python -I tools/make-icons.py` (icons and the 300 px logo). The screenshots and tiles come from the local `.claude/tools/` scripts: `shots.mjs` and `shot-mobile.mjs` take the raw reader screenshots in Chrome with the extension and Toonlight loaded (images held back by the script so the bubble shows "Preloading 52 / 124…"), and `store-images.py` draws the comparison, the callouts and the promo tiles from them.
+To redraw: `python -I tools/make-icons.py` (icons and the 300 px logo). The screenshots and tiles come from the local `.claude/tools/` scripts: `shots.mjs`, `shot-mobile.mjs` and `shot-jump.mjs` (through `slow-proxy.mjs`) take the raw reader screenshots in Chrome with the extension and Toonlight loaded (images held back by the script so the bubble shows "Preloading 52 / 124…"), and `store-images.py` draws the comparison, the callouts and the promo tiles from them.
 
 Captions, where a store asks:
 
@@ -92,7 +93,7 @@ Captions, where a store asks:
 2. Fewer blank panels while you read, on a computer and on a phone
 3. Downloads start as the chapter opens; a small bubble shows the progress
 4. On the mobile site too, each image downloaded once, in the size your screen needs
-5. Jump anywhere: the panels are already there (shown with the Toonlight dark theme)
+5. Jump ahead: the panels are already there
 
 **URLs:**
 
@@ -164,9 +165,9 @@ The partner account is already set up (Toonlight).
 1. https://addons.mozilla.org/developers/ → **Submit a New Add-on** → **On this site** → upload `toonlight-preloader-<version>-firefox.zip`. It validates with no errors or warnings (`web-ext lint` is clean).
    - Compatibility: Firefox, and Firefox for Android ticked and greyed out. The manifest's `gecko_android` sets it; phones are sent to the mobile reader (`m.webtoons.com`), which the preloader supports.
    - The add-on ID is `toonlight-preloader@hervad` and can never change after the first upload.
-2. **Do you need to submit source code?** **No.** The package's JavaScript is `webtoons-preloader.user.js` exactly as it is on GitHub; no tool generated, minified or bundled it.
+2. **Do you need to submit source code?** **No.** (AMO may ask this after the Describe page instead.) The package's JavaScript is `webtoons-preloader.user.js` exactly as it is on GitHub; no tool generated, minified or bundled it. If a reviewer asks anyway: `git archive --format=zip -o source.zip v<version>`.
 3. **Describe add-on:**
-   - Summary and description: the text above. Add-on URL: the default slug is fine.
+   - Summary and description: the text above. **Add-on URL:** click Edit and set it to `toonlight-preloader`. AMO allows at most 30 characters, and the default it makes from the name (`toonlight-preloader-for-webtoon`) has 31, so the form is refused until it's changed.
    - Not experimental; doesn't require payment.
    - Categories: Games & Entertainment, and Photos, Music & Videos (AMO allows two).
    - Support website: the issues URL. License: MIT.

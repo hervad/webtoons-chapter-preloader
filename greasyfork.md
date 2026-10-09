@@ -10,9 +10,9 @@ It works in Tampermonkey, Violentmonkey and Greasemonkey, on the desktop site an
 
 ## How it works
 
-- **Downloads start early.** The script runs as soon as the page starts loading and asks for each image the moment the browser reads it, instead of waiting for the rest of the page. In a test in Firefox, all 126 images of a chapter had finished downloading before the page itself was done loading.
+- **Downloads start early.** The script runs as soon as the page starts loading and starts on the chapter while the page is still opening, instead of waiting for the rest of the page. In a test on a 124-panel chapter, every panel had finished downloading before the page itself was done loading.
 - **Panels are ready before you reach them.** Browsers only prepare (decode) images that are close to the screen, so a fast scroll can show an image blank for a moment even when it's already downloaded. The script prepares the panels up to three screens ahead of where you're reading. It does this a few at a time, so it doesn't fill your memory with the whole chapter.
-- **The top of the chapter comes first.** The first few panels are downloaded with high priority.
+- **Panel 1 comes first.** It's requested on its own, then the rest of the first screen, then the whole remaining chapter at once. WEBTOON's image server answers each image after a different delay, so asking for everything at once used to bring the panels back in random order, with panel 1 sometimes after dozens of others. On a fresh episode the server can still take a moment for an occasional image.
 - **Your page stays put.** The script never scrolls the page to make images load, and there's nothing to set up.
 - **Screen readers** hear the final result once, not every count.
 - **Failed images don't leave you hanging.** If an image can't be loaded, the bubble says so (`⚠ Preloaded 125 / 126 images (1 failed)`) instead of waiting forever.

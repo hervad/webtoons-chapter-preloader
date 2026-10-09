@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Webtoons Chapter Preloader
 // @namespace    https://github.com/hervad/webtoons-chapter-preloader
-// @version      1.3.0
+// @version      1.3.1
 // @description  Force-loads every image in a Webtoons chapter as the page opens instead of lazy-loading on scroll, and pre-decodes images just ahead of the reader so fast scrolling doesn't show blanks.
 // @author       hervad
 // @match        https://www.webtoons.com/*/viewer*
@@ -42,31 +42,85 @@
     const IMG_SELECTOR   = '#_imageList img';
     const M_IMG_SELECTOR = '.viewer_img img._checkVisible'; // m.webtoons.com reader
     const STATUS_ID      = '__wt_preloader_status'; // don't rename: Webtoons Dark Mode ignores the bubble by this ID
-    const HIGH_PRIORITY  = 3;      // first N images (top of chapter) fetched ahead of the rest
+    const TIERS          = [1, 5]; // desktop: panel 1 alone, then the next 5 (the first screen), then the rest
+    const TIER_WAIT_MS   = 1500;   // open the next tier after this long even if the current one hasn't arrived
     const DECODE_AHEAD   = '300%'; // pre-decode images within this many viewport heights below the screen
     const MOBILE_WAIT_MS = 15000;  // give up on m.webtoons.com if the viewer hasn't shown a panel by then
 
     /* ---------- core: start a download ---------- */
 
-    let started = 0; // downloads started so far, in document order
-
-    function startDownload(img, src, srcset) {
+    function startDownload(img, src, srcset, high) {
         // Hints must be set before src: assigning src starts the request.
         img.loading = 'eager';                             // in case the site ever adds loading="lazy"
         img.decoding = 'async';                            // Chromium hint; Firefox ignores it
-        if (started++ < HIGH_PRIORITY) img.fetchPriority = 'high';
+        if (high) img.fetchPriority = 'high';
         // srcset first, so the browser picks its candidate once instead of
         // starting on src and switching.
         if (srcset) img.srcset = srcset;
         img.src = src;
     }
 
-    // Desktop: the real URL is in the markup, in data-url.
-    function preloadImage(img) {
+    /* ---------- desktop: download in tiers ---------- */
+    // On a chapter the image server hasn't cached, it answers each image after
+    // a different delay (from 0.05 s to several seconds). Requested all at
+    // once, the panels arrived in random order: panel 1 came anywhere from 1st
+    // to 109th, so the reader saw a blank first panel while the bubble said
+    // 90. Priority hints can't fix that, because the delay comes before the
+    // server has anything to send. So panel 1 goes alone, then the rest of the
+    // first screen, then everything else at once. A tier opens when the one
+    // before it has arrived, or after TIER_WAIT_MS: one slow image must not
+    // hold back the whole chapter.
+    const seen = new WeakSet();
+    const held = [];                       // [img, tier] waiting for their tier to open
+    const inFlight = TIERS.map(() => 0);   // downloads per tier that haven't arrived yet
+    let seenCount = 0, openTier = 0, tierTimer = 0;
+
+    function tierOf(k) {
+        let end = 0;
+        for (let t = 0; t < TIERS.length; t++) {
+            end += TIERS[t];
+            if (k < end) return t;
+        }
+        return TIERS.length;
+    }
+
+    function openNextTier() {
+        clearTimeout(tierTimer);
+        openTier++;
+        held.splice(0).forEach(([img, t]) => (t <= openTier ? fetchPanel(img, t) : held.push([img, t])));
+        if (openTier < TIERS.length) tierTimer = setTimeout(openNextTier, TIER_WAIT_MS);
+    }
+
+    function fetchPanel(img, t) {
         const realUrl = img.dataset.url;
         if (!realUrl) return;                              // nothing to do
         if (img.getAttribute('src') === realUrl) return;   // already pointing at the real one
-        startDownload(img, realUrl);
+        if (t < TIERS.length) {
+            inFlight[t]++;
+            // The placeholder can still be loading when src changes, and its
+            // load event fires afterwards: only the real panel counts.
+            const arrived = e => {
+                if (e && img.currentSrc !== realUrl) return;
+                img.removeEventListener('load', arrived);
+                img.removeEventListener('error', arrived);
+                if (--inFlight[t] === 0 && t === openTier) openNextTier();
+            };
+            img.addEventListener('load', arrived);
+            img.addEventListener('error', arrived);
+        }
+        // The first screen also goes ahead of the page's other images (ads, thumbnails).
+        startDownload(img, realUrl, null, t < TIERS.length);
+        if (decoder) decoder.observe(img);
+    }
+
+    // Desktop: the real URL is in the markup, in data-url.
+    function preloadImage(img) {
+        if (seen.has(img)) return;
+        seen.add(img);
+        const t = tierOf(seenCount++);
+        if (seenCount === 1) tierTimer = setTimeout(openNextTier, TIER_WAIT_MS);
+        if (t <= openTier) fetchPanel(img, t);
+        else held.push([img, t]);
     }
 
     /* ---------- mobile site (m.webtoons.com) ---------- */
@@ -129,7 +183,7 @@
             const { width, height } = state.list[i];
             if (Math.abs(img.getAttribute('height') - img.getAttribute('width') * height / width) > 2) return;
             const want = mobileUrls(state.list[i], state.country);
-            startDownload(img, want.src, want.srcset);
+            startDownload(img, want.src, want.srcset, true);
         });
         return imgs.filter(img => img.getAttribute('src') !== state.placeholder);
     }
@@ -211,11 +265,13 @@
         fadeTimer = setTimeout(() => { el.style.opacity = '0'; }, delay);
     }
 
-    function trackProgress(imgs) {
+    // pending(img): its download hasn't started yet (a held desktop panel still
+    // shows its loaded placeholder, so img.complete alone would count it).
+    function trackProgress(imgs, pending) {
         const update = () => {
             let settled = 0, failed = 0;
             for (const img of imgs) {
-                if (!img.complete) continue;
+                if (!img.complete || pending(img)) continue;
                 settled++;
                 if (img.naturalWidth === 0) failed++; // complete but broken = error
             }
@@ -248,9 +304,11 @@
         update();
     }
 
-    function watch(imgs) {
-        if (decoder) imgs.forEach(img => decoder.observe(img));
-        trackProgress(imgs);
+    // Held panels join the decoder when their download starts (fetchPanel),
+    // so it doesn't decode their placeholder instead.
+    function watch(imgs, pending = () => false) {
+        if (decoder) imgs.forEach(img => { if (!pending(img)) decoder.observe(img); });
+        trackProgress(imgs, pending);
     }
 
     /* ---------- entry points ---------- */
@@ -263,7 +321,7 @@
         const imgs = [...document.querySelectorAll(IMG_SELECTOR)];
         if (!imgs.length) return;
         imgs.forEach(preloadImage);
-        watch(imgs);
+        watch(imgs, img => img.getAttribute('src') !== img.dataset.url);
     }
 
     // Mobile: the viewer builds the <img>s after parsing and sets the first
@@ -290,6 +348,24 @@
     }
 
     if (location.hostname === 'm.webtoons.com') {
+        // The mobile page also starts ~650 episode-list thumbnails (about
+        // 12 MB) as it opens, and the viewer requests its first panels at the
+        // same normal priority, so which panels arrived first was luck: the
+        // first screen came after panels further down. Marking every panel
+        // high priority as the viewer creates it (before it sets src) puts
+        // the viewer's own first screen first, then the preloaded rest, all
+        // ahead of the thumbnails.
+        const boost = new MutationObserver(records => {
+            for (const r of records) {
+                for (const node of r.addedNodes) {
+                    if (node.nodeType !== 1) continue;
+                    if (node.matches(M_IMG_SELECTOR)) node.fetchPriority = 'high';
+                    else node.querySelectorAll(M_IMG_SELECTOR).forEach(img => { img.fetchPriority = 'high'; });
+                }
+            }
+        });
+        boost.observe(document, { childList: true, subtree: true });
+        setTimeout(() => boost.disconnect(), MOBILE_WAIT_MS);
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', finishMobile, { once: true });
         } else {

@@ -35,12 +35,12 @@ Before each upload: `node tools/build-extension.mjs`, and check that the zip's v
 **Description** (paste only the text. AMO accepts Markdown, so `-` bullets work there; Edge needs at least 250 characters):
 > Toonlight Preloader gets a WEBTOON chapter ready the moment you open it, so you can simply read. Take your time or flick straight to the end: the next panel is already there.
 >
-> Normally the site fetches each panel only as you scroll to it, so on a slow or busy connection you keep running into blank gaps and waiting for them to fill in. Toonlight Preloader starts downloading the whole chapter while the page is still opening, top of the chapter first, and prepares the next few screens before you reach them.
+> Normally the site fetches each panel only as you scroll to it, so on a slow or busy connection you keep running into blank gaps and waiting for them to fill in. Toonlight Preloader starts downloading the chapter while the page is still opening: panel 1 first, then the rest of the first screen, then everything else at once. It also prepares the next few screens before you reach them.
 >
 > How it feels:
 > • No waiting. Panels are there when you get to them. On a fast connection, a 124-panel chapter had finished downloading before the page itself had finished loading.
 > • No gaps, even on a slow connection. In our tests on a 9 Mbit/s link, reading through a chapter on a computer showed no blank panels at all, and on a phone less than half as many as without it.
-> • Your page stays put. It never scrolls the page for you or jumps back to the top, the way some loaders do to force images to load. You start reading right away.
+> • Your page stays put. It never scrolls the page for you or jumps back to the top, the way some loaders do to force images to load.
 > • Nothing to set up. It's made for this one site: install it and open a chapter. No settings, no switches to turn on per site.
 > • Works on your phone too. On the mobile site it loads every panel the page shows, in the image size your screen needs, each one once. Most loaders only work on the desktop site.
 > • You always know where it stands. A small bubble shows the progress and fades away. If a panel can't be loaded, it tells you instead of leaving you guessing.
@@ -73,6 +73,7 @@ Why the description reads this way:
   - Slow link (a local proxy capped at 9 Mbit/s, so the servers' own priorities apply), reading one screen per second: computer, 3 screens with a blank panel without, 0 with; phone (Pixel 9a profile), 11 blank panels without, 5 with.
   - Fast flick (a screen every 0.3 s, Chrome's Fast 4G profile), computer: 21 screens with a blank panel without, 0 with.
   - Jump (screenshot 5): 8 s after opening, jump to panel 62 of 124 on the 9 Mbit/s link, screen read 30 ms later, Toonlight on in both: without, both panels on screen blank; with, both painted. At 150 ms the site had filled them too, so the image shows the first moment after the jump, not a long wait; on a 4 Mbit/s link one panel was still blank at 150 ms.
+  - Order on fresh episodes (episodes the image server hadn't cached, a new one for every run, desktop Firefox, 2026-10-09): with 1.3.1 panel 1 arrived first in 11 of 11 runs (6 in Firefox, 3 in Chrome, 2 in Edge) and panels 1–6 took the first six places in 9 of 11; with 1.3.0 (whole chapter requested at once) panel 1 arrived anywhere from 1st to 109th. The server answers each image after a different delay (0.05 s to several seconds), so an occasional slow image can still be late: the copy says "first" only for what the tiers guarantee.
   - Size: 10.5 MB on a computer; on the phone 3.3 MB (high-density screen) or 1.9 MB (1× screen), each image requested once.
   - The test tools are in the local `.claude/tools/` (`blank-scroll.mjs`, `slow-proxy.mjs`, `m-test.mjs`, `bytes.mjs`). Re-measure before changing a number.
 

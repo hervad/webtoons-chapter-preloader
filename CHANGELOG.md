@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2026-10-09
+
+### Fixed
+- **Panel 1 comes first.** On episodes WEBTOON's image server hasn't cached, it answers each image after a different delay, so requesting the whole chapter at once brought the panels back in random order: panel 1 arrived anywhere from 1st to 109th, and the first screen stayed blank while the bubble counted up. Desktop now downloads in tiers: panel 1 alone, then panels 2–6, then the rest at once, each tier starting when the one before it has arrived (or after 1.5 s). In tests on 11 fresh episodes in Firefox, Chrome and Edge, panel 1 arrived first in all 11, and panels 1–6 took the first six places in 9.
+- **Mobile site: the first screen comes first.** Every panel is marked high priority as the viewer creates it, so the viewer's own first panels no longer compete at normal priority with the preloaded ones and with the page's ~650 episode-list thumbnails. The first screen arrived in 5.5–7.4 s instead of up to 20 s on a 9 Mbit/s test link, and the whole visible chapter in about 9 s.
+- The bubble no longer counts a panel whose download hasn't started (its placeholder is already "loaded"), and pre-decoding starts on a panel only once its real image is set.
+
+### Changed
+- The `HIGH_PRIORITY` setting is replaced by `TIERS` and `TIER_WAIT_MS`. The first screen (panels 1–6) is high priority.
+- README, Greasy Fork text and store copy: "the top of the chapter comes first" now describes what the tiers guarantee, and a slow image on an uncached episode is listed under Known issues.
+
 ## [1.3.0] - 2026-10-08
 
 ### Added

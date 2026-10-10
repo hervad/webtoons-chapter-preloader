@@ -130,7 +130,7 @@ If you don't want the progress bubble, delete the `trackProgress(imgs)` call in 
 
 ## Also by the author
 
-[Webtoons Dark Mode](https://github.com/hervad/webtoons-dark-mode) ([Greasy Fork](https://greasyfork.org/scripts/577859)) is a dark theme for WEBTOON that keeps the comic's colours exactly as the artist drew them: it restyles the site around the comic and never filters or recolours the panels. It's also available as the **Toonlight** browser extension for [Chrome](https://chromewebstore.google.com/detail/toonlight-dark-mode-for-w/jefblpkbipgmpefdnninpnofkjckpafn) and [Edge](https://microsoftedge.microsoft.com/addons/detail/toonlight-dark-mode-for-/iheadalpoiialennkmndleakobiilcfm). The two scripts are tested together and work side by side.
+[Webtoons Dark Mode](https://github.com/hervad/webtoons-dark-mode) ([Greasy Fork](https://greasyfork.org/scripts/577859)) is a dark theme for WEBTOON that keeps the comic's colours exactly as the artist drew them: it restyles the site around the comic and never filters or recolours the panels. It's also available as the **Toonlight** browser extension for [Chrome](https://chromewebstore.google.com/detail/toonlight-dark-mode-for-w/jefblpkbipgmpefdnninpnofkjckpafn), [Edge](https://microsoftedge.microsoft.com/addons/detail/toonlight-dark-mode-for-/iheadalpoiialennkmndleakobiilcfm) and [Firefox](https://addons.mozilla.org/firefox/addon/toonlight/). The two scripts are tested together and work side by side.
 
 ## Contributing
 

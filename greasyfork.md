@@ -36,7 +36,7 @@ The script uses `@grant none`: it has no userscript-manager permissions beyond r
 
 [**Webtoons Dark Mode**](https://greasyfork.org/scripts/577859) is a dark theme for the whole site that keeps the comic's colours exactly as the artist drew them. Unlike dark-mode extensions that invert the page, it never filters or recolours the panels: skin tones stay skin tones. It covers the header and menus, series pages, the reader, comments and popups, and adds a night-reading dim for the panels.
 
-The two scripts are made to work together and are tested side by side. Prefer an extension? The same theme is available as **Toonlight** for [Chrome, Brave and Opera](https://chromewebstore.google.com/detail/toonlight-dark-mode-for-w/jefblpkbipgmpefdnninpnofkjckpafn) and [Edge](https://microsoftedge.microsoft.com/addons/detail/toonlight-dark-mode-for-/iheadalpoiialennkmndleakobiilcfm).
+The two scripts are made to work together and are tested side by side. Prefer an extension? The same theme is available as **Toonlight** for [Chrome, Brave and Opera](https://chromewebstore.google.com/detail/toonlight-dark-mode-for-w/jefblpkbipgmpefdnninpnofkjckpafn), [Edge](https://microsoftedge.microsoft.com/addons/detail/toonlight-dark-mode-for-/iheadalpoiialennkmndleakobiilcfm) and [Firefox](https://addons.mozilla.org/firefox/addon/toonlight/).
 
 ## Source and issues
 

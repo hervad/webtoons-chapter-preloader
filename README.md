@@ -150,7 +150,7 @@ If you don't want the progress bubble, delete the `trackProgress(imgs)` call in 
 
 ## Contributing
 
-Issues and pull requests welcome. For bug reports, including a chapter URL where the issue reproduces is helpful (the markup occasionally varies by genre/locale).
+Issues and pull requests welcome. For bug reports, including a chapter URL where the issue reproduces is helpful (the markup occasionally varies by genre/locale). To report a security problem privately instead, see [SECURITY.md](SECURITY.md); what the preloader does for screen readers and keyboard users is in [ACCESSIBILITY.md](ACCESSIBILITY.md).
 
 The Greasy Fork page text lives in [`greasyfork.md`](greasyfork.md); its one-line summary is the script's `@description`. Changes are listed in [`CHANGELOG.md`](CHANGELOG.md).
 

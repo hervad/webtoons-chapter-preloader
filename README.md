@@ -1,18 +1,32 @@
 # Webtoons Chapter Preloader
 
-Loads every panel of a [WEBTOON](https://www.webtoons.com) chapter as soon as the page opens, instead of one at a time as you scroll, so you can read without waiting for panels to fill in. On desktop and on your phone, as a userscript or as the **Toonlight Preloader** browser extension.
+**A chapter preloader made for [WEBTOON](https://www.webtoons.com), and only WEBTOON. Open a chapter and every panel is on its way, panel 1 first.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Greasy Fork version](https://img.shields.io/greasyfork/v/575967.svg)](https://greasyfork.org/en/scripts/575967-webtoons-chapter-preloader)
 [![Greasy Fork installs](https://img.shields.io/greasyfork/dt/575967.svg)](https://greasyfork.org/en/scripts/575967-webtoons-chapter-preloader)
 [![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Toonlight%20Preloader-1a73e8)](https://chromewebstore.google.com/detail/toonlight-preloader-for-w/kanadpglihpekgidpopkpblcheoinekh)
 [![Edge Add-ons](https://img.shields.io/badge/Edge%20Add--ons-Toonlight%20Preloader-0078d7)](https://microsoftedge.microsoft.com/addons/detail/toonlight-preloader-for-w/mpgabnfjnfleojaokcojabpcpfnnpgfd)
+[![Firefox Add-ons](https://img.shields.io/badge/Firefox%20Add--ons-Toonlight%20Preloader-ff7139)](https://addons.mozilla.org/firefox/addon/toonlight-preloader/)
 
-## What it does
+Reading on webtoons.com means waiting. The site fetches each panel only as you scroll to it, so on a slow or busy connection you keep running into blank gaps, and a jump ahead lands on empty space. Other loaders help, but they work around the site: some scroll the page to the bottom and back to force the images in, general-purpose tools have to be switched on for each site or don't recognise WEBTOON's images at all, and the ones made for WEBTOON only know the desktop site.
 
-Webtoons.com lazy-loads chapter images as you scroll, which produces a brief blank-image flash every time a new panel comes into view — especially noticeable on slower connections or long chapters. This script asks for the whole chapter while the page is still opening, in reading order: panel 1 first, then the rest of the first screen, then everything else at once. It also decodes images a few screens ahead of where you're reading. By the time you scroll, the panels are already downloaded and the next few are ready to paint. It never scrolls the page itself and has nothing to configure.
+This preloader takes the opposite approach. It's made for WEBTOON's reader, on the desktop and on the mobile site, and works with the page instead of around it: while the chapter is still opening, it asks for every panel in reading order (panel 1 first, then the rest of the first screen, then everything else at once) and prepares the next few screens before you reach them. It never scrolls the page and has nothing to set up. Use it as a userscript or as the **Toonlight Preloader** browser extension.
 
 ![Two grids of 124 squares, one per panel of a chapter, measured right after it opened: without the preloader 2 are downloaded, with it all 124](docs/screenshots/compare.jpg)
+
+### Why it feels different
+
+| | Other loaders | Webtoons Chapter Preloader |
+| --- | --- | --- |
+| **Your place in the chapter** | Some scroll the page to the bottom and back to force loading | Never scrolls: the page stays where you put it |
+| **Getting started** | General-purpose tools are off until set up per site, or miss WEBTOON's images | Nothing to set up: install it and open a chapter |
+| **On your phone** | The WEBTOON loaders work only on the desktop site | The mobile site too, in the image size your screen needs |
+| **Coming back to a chapter** | One adds a random parameter to every image, so the whole chapter downloads again | The same addresses the site uses, so your browser's cache works as usual |
+| **Progress and failures** | Not shown | A small bubble shows the progress, then says how many failed, if any |
+| **Access** | General-purpose tools ask to read every website | Only WEBTOON's chapter pages; no storage, no data collection |
+
+### Measured
 
 Measured on a 124-panel chapter (Tower of God S3 Ep. 100) in Chrome, Edge and Firefox; the method is in [`extension/STORE.md`](extension/STORE.md):
 
@@ -58,11 +72,13 @@ One click, no userscript manager, and no permissions beyond WEBTOON's chapter pa
 
 - **Chrome, Brave, Opera, Vivaldi:** [Toonlight Preloader on the Chrome Web Store](https://chromewebstore.google.com/detail/toonlight-preloader-for-w/kanadpglihpekgidpopkpblcheoinekh)
 - **Edge:** [Toonlight Preloader on Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/toonlight-preloader-for-w/mpgabnfjnfleojaokcojabpcpfnnpgfd)
-- **Firefox (also Firefox for Android):** in review on Firefox Add-ons; until it's listed, use the userscript below.
+- **Firefox (also Firefox for Android):** [Toonlight Preloader on Firefox Add-ons](https://addons.mozilla.org/firefox/addon/toonlight-preloader/)
 
-The extension updates through the store.
+The extension updates through the store. On an Android phone, open the Firefox Add-ons link in Firefox and tap **Add to Firefox**; Chrome for Android can't run extensions.
 
 ### Userscript
+
+For people who already use a userscript manager. Updates arrive automatically.
 
 **Recommended (with auto-updates):**
 
@@ -130,7 +146,7 @@ If you don't want the progress bubble, delete the `trackProgress(imgs)` call in 
 
 ## Also by the author
 
-[Webtoons Dark Mode](https://github.com/hervad/webtoons-dark-mode) ([Greasy Fork](https://greasyfork.org/scripts/577859)) is a dark theme for WEBTOON that keeps the comic's colours exactly as the artist drew them: it restyles the site around the comic and never filters or recolours the panels. It's also available as the **Toonlight** browser extension for [Chrome](https://chromewebstore.google.com/detail/toonlight-dark-mode-for-w/jefblpkbipgmpefdnninpnofkjckpafn), [Edge](https://microsoftedge.microsoft.com/addons/detail/toonlight-dark-mode-for-/iheadalpoiialennkmndleakobiilcfm) and [Firefox](https://addons.mozilla.org/firefox/addon/toonlight/). The two scripts are tested together and work side by side.
+[Webtoons Dark Mode](https://github.com/hervad/webtoons-dark-mode) ([Greasy Fork](https://greasyfork.org/scripts/577859)) is a dark theme made for WEBTOON, and only WEBTOON. Every part of the site is restyled by hand, from the menus and episode lists to the comments, the reader and the mobile site, and the comic panels stay exactly as the artist drew them: no filter, no colour shift. It's also available as the **Toonlight** browser extension for [Chrome](https://chromewebstore.google.com/detail/toonlight-dark-mode-for-w/jefblpkbipgmpefdnninpnofkjckpafn), [Edge](https://microsoftedge.microsoft.com/addons/detail/toonlight-dark-mode-for-/iheadalpoiialennkmndleakobiilcfm) and [Firefox](https://addons.mozilla.org/firefox/addon/toonlight/). The two scripts are tested together and work side by side.
 
 ## Contributing
 

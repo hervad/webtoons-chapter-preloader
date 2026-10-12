@@ -32,19 +32,25 @@ Before each upload: `node tools/build-extension.mjs`, and check that the zip's v
 **Short description / summary** (Chrome allows 132 characters and takes it from the manifest; paste the same into AMO's summary):
 > Each WEBTOON chapter ready as it opens: no waiting for panels as you scroll, on desktop or phone. Not affiliated with NAVER WEBTOON.
 
-**Description** (paste only the text. AMO accepts Markdown, so `-` bullets work there; Edge needs at least 250 characters):
+**Description** (Chrome and Edge show plain text, so the bullets are `•` characters, which read well in all three stores; Edge needs at least 250 characters). Paste it **without the `> ` quote markers**, which would show literally; this writes a ready-to-paste copy:
+
+```bash
+sed -n '/^\*\*Description\*\*/,/^Why the description/p' extension/STORE.md | sed -n 's/^> \{0,1\}//p' > dist/store/description.txt
+```
+
 > Toonlight Preloader gets a WEBTOON chapter ready the moment you open it, so you can simply read. Take your time or flick straight to the end: the next panel is already there.
 >
-> Normally the site fetches each panel only as you scroll to it, so on a slow or busy connection you keep running into blank gaps and waiting for them to fill in. Toonlight Preloader starts downloading the chapter while the page is still opening: panel 1 first, then the rest of the first screen, then everything else at once. It also prepares the next few screens before you reach them.
+> Normally the site fetches each panel only as you scroll to it, so on a slow or busy connection you keep running into blank gaps and waiting for them to fill in. Other loaders help, but they work around the site: some scroll the page to the bottom and back to force the images in, general-purpose tools have to be switched on for each site, and most only know the desktop site. Toonlight Preloader is made for this one site instead. While the chapter is still opening, it asks for every panel in reading order (panel 1 first, then the rest of the first screen, then everything else at once) and prepares the next few screens before you reach them.
 >
-> How it feels:
-> • No waiting. Panels are there when you get to them. On a fast connection, a 124-panel chapter had finished downloading before the page itself had finished loading.
-> • No gaps, even on a slow connection. In our tests on a 9 Mbit/s link, reading through a chapter on a computer showed no blank panels at all, and on a phone less than half as many as without it.
-> • Your page stays put. It never scrolls the page for you or jumps back to the top, the way some loaders do to force images to load.
-> • Nothing to set up. It's made for this one site: install it and open a chapter. No settings, no switches to turn on per site.
-> • Works on your phone too. On the mobile site it loads every panel the page shows, in the image size your screen needs, each one once. Most loaders only work on the desktop site.
-> • You always know where it stands. A small bubble shows the progress and fades away. If a panel can't be loaded, it tells you instead of leaving you guessing.
-> • Light and private. It runs only on chapter pages and asks for nothing else: no access to other websites, no storage, no data collection, no ads, no tracking, no remote code.
+> What you get:
+>
+> • No waiting: panels are there when you get to them. On a fast connection, a 124-panel chapter had finished downloading before the page itself had finished loading.
+> • No gaps, even on a slow connection: in our tests on a 9 Mbit/s link, reading through a chapter on a computer showed no blank panels at all, and on a phone less than half as many as without it.
+> • Your page stays put: it never scrolls the page for you or jumps back to the top.
+> • Nothing to set up: install it and open a chapter. No settings, no switches to turn on per site.
+> • On your phone too: on the mobile site it loads every panel the page shows, in the image size your screen needs, each one once.
+> • You always know where it stands: a small bubble shows the progress and fades away. If a panel can't be loaded, it tells you instead of leaving you guessing.
+> • Private and light: it runs only on chapter pages and asks for nothing else. No access to other websites, no storage, no data collection, no ads, no tracking, no remote code.
 > • Open source (MIT) and maintained: the same code as the Webtoons Chapter Preloader userscript.
 >
 > Pairs with Toonlight, the dark theme by the same developer; the two are tested together.
@@ -59,9 +65,9 @@ Why the description reads this way:
 
 - **It sells the feeling, then backs it with one number.** Readers care about "no waiting, no gaps, page stays put"; each bullet leads with that and keeps any figure to the one that proves it.
 - **No competitor is named.** Chrome's spam policy and Edge's policy 1.1.2 don't allow other products' names in a listing. Every contrast is a general one that the competitor research (2026-10-09, current code of the WEBTOON loaders on the Chrome Web Store, AMO, Edge and Greasy Fork) backs:
-  - "the way some loaders do": two of them scroll the page to the bottom and back to force loading; reviews of one mention a 2–3 s wait before reading.
-  - "Nothing to set up … no switches to turn on per site": the generic lazy-load tools are off until configured per site, or don't recognise WEBTOON's images at all.
-  - "Most loaders only work on the desktop site": all seven relevant ones match only `www.webtoons.com`.
+  - "some scroll the page to the bottom and back": two of them do, to force loading; reviews of one mention a 2–3 s wait before reading.
+  - "general-purpose tools have to be switched on for each site" and "no switches to turn on per site": the generic lazy-load tools are off until configured per site, or don't recognise WEBTOON's images at all.
+  - "most only know the desktop site": all seven relevant ones match only `www.webtoons.com`.
   - "no access to other websites": the generic tools ask for every website.
   - "each one once": one userscript adds a cache-busting parameter, so panels download again on every visit.
   - "tells you instead of leaving you guessing": none of them shows progress or failures.
@@ -98,6 +104,7 @@ Captions, where a store asks:
 
 **URLs:**
 
+- Live listings: [Chrome Web Store](https://chromewebstore.google.com/detail/toonlight-preloader-for-w/kanadpglihpekgidpopkpblcheoinekh), [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/toonlight-preloader-for-w/mpgabnfjnfleojaokcojabpcpfnnpgfd), [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/toonlight-preloader/)
 - Homepage: https://github.com/hervad/webtoons-chapter-preloader
 - Support: https://github.com/hervad/webtoons-chapter-preloader/issues
 - Privacy policy: https://github.com/hervad/webtoons-chapter-preloader/blob/main/PRIVACY.md

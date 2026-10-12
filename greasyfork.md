@@ -1,6 +1,12 @@
-Webtoons.com lazy-loads chapter images as you scroll, so every time a new panel comes into view there's a brief blank flash, especially on slower connections or long chapters. This script downloads the whole chapter while the page is still opening, and gets the next few panels ready to paint before you reach them. By the time you scroll, there's nothing left to wait for.
+**A chapter preloader made for [WEBTOON](https://www.webtoons.com), and only WEBTOON. Open a chapter and every panel is on its way, panel 1 first.**
 
-> **No userscript manager?** The same preloader is also a browser extension, **Toonlight Preloader**: one click to install, nothing to set up. Get it for [Chrome, Brave and Opera](https://chromewebstore.google.com/detail/toonlight-preloader-for-w/kanadpglihpekgidpopkpblcheoinekh) or [Edge](https://microsoftedge.microsoft.com/addons/detail/toonlight-preloader-for-w/mpgabnfjnfleojaokcojabpcpfnnpgfd). Use either the script or the extension, not both.
+Reading on webtoons.com means waiting. The site fetches each panel only as you scroll to it, so on a slow or busy connection you keep running into blank gaps, and a jump ahead lands on empty space. Other loaders help, but they work around the site: some scroll the page to the bottom and back to force the images in, and the ones made for WEBTOON only know the desktop site.
+
+This script takes the opposite approach. It works with WEBTOON's own reader, on the desktop and on the mobile site: while the chapter is still opening, it asks for every panel in reading order and prepares the next few screens before you reach them. By the time you scroll, there's nothing left to wait for.
+
+> **No userscript manager?** The same preloader is also a browser extension, **Toonlight Preloader**: one click to install, nothing to set up. Get it for [Chrome, Brave and Opera](https://chromewebstore.google.com/detail/toonlight-preloader-for-w/kanadpglihpekgidpopkpblcheoinekh), [Edge](https://microsoftedge.microsoft.com/addons/detail/toonlight-preloader-for-w/mpgabnfjnfleojaokcojabpcpfnnpgfd) or [Firefox, including Firefox for Android](https://addons.mozilla.org/firefox/addon/toonlight-preloader/). Use either the script or the extension, not both.
+
+Screenshots and measurements: [github.com/hervad/webtoons-chapter-preloader](https://github.com/hervad/webtoons-chapter-preloader#readme)
 
 ## Getting started
 
@@ -10,14 +16,19 @@ It works in Tampermonkey, Violentmonkey and Greasemonkey, on the desktop site an
 
 **Chrome, Edge and other Chromium browsers:** the browser needs an extra permission before any userscript can run. Open `chrome://extensions`, click **Details** on your userscript manager, and turn on **Allow User Scripts**. On Chrome versions before 138, turn on **Developer mode** (top-right of `chrome://extensions`) instead.
 
-## How it works
+## What's different
 
-- **Downloads start early.** The script runs as soon as the page starts loading and starts on the chapter while the page is still opening, instead of waiting for the rest of the page. In a test on a 124-panel chapter, every panel had finished downloading before the page itself was done loading.
-- **Panels are ready before you reach them.** Browsers only prepare (decode) images that are close to the screen, so a fast scroll can show an image blank for a moment even when it's already downloaded. The script prepares the panels up to three screens ahead of where you're reading. It does this a few at a time, so it doesn't fill your memory with the whole chapter.
-- **Panel 1 comes first.** It's requested on its own, then the rest of the first screen, then the whole remaining chapter at once. WEBTOON's image server answers each image after a different delay, so asking for everything at once used to bring the panels back in random order, with panel 1 sometimes after dozens of others. On a fresh episode the server can still take a moment for an occasional image.
-- **Your page stays put.** The script never scrolls the page to make images load, and there's nothing to set up.
-- **Screen readers** hear the final result once, not every count.
-- **Failed images don't leave you hanging.** If an image can't be loaded, the bubble says so (`⚠ Preloaded 125 / 126 images (1 failed)`) instead of waiting forever.
+**No waiting.** The script starts on the chapter while the page is still opening, instead of waiting for the rest of the page. In a test on a 124-panel chapter, every panel had finished downloading before the page itself was done loading. On a slow 9 Mbit/s link, reading one screen per second on a computer showed no blank panels at all.
+
+**Panel 1 comes first.** It's requested on its own, then the rest of the first screen, then the whole remaining chapter at once. WEBTOON's image server answers each image after a different delay, so asking for everything at once brings the panels back in random order, with panel 1 sometimes after dozens of others. On a fresh episode the server can still take a moment for an occasional image.
+
+**Panels are ready before you reach them.** Browsers only prepare (decode) images that are close to the screen, so a fast scroll can show an image blank for a moment even when it's already downloaded. The script prepares the panels up to three screens ahead of where you're reading, a few at a time, so it doesn't fill your memory with the whole chapter.
+
+**Your page stays put.** The script never scrolls the page to make images load, and there's nothing to set up.
+
+**On your phone too.** On the mobile site it loads every panel the page shows, in the image size your screen needs, each one once.
+
+**You always know where it stands.** The bubble shows the progress and fades away. If an image can't be loaded, it says so (`⚠ Preloaded 125 / 126 images (1 failed)`) instead of waiting forever. Screen readers hear the final result once, not every count.
 
 ## Data usage
 
@@ -34,9 +45,9 @@ The script uses `@grant none`: it has no userscript-manager permissions beyond r
 
 ## Also try: Webtoons Dark Mode
 
-[**Webtoons Dark Mode**](https://greasyfork.org/scripts/577859) is a dark theme for the whole site that keeps the comic's colours exactly as the artist drew them. Unlike dark-mode extensions that invert the page, it never filters or recolours the panels: skin tones stay skin tones. It covers the header and menus, series pages, the reader, comments and popups, and adds a night-reading dim for the panels.
+[**Webtoons Dark Mode**](https://greasyfork.org/scripts/577859) is a dark theme made for WEBTOON, and only WEBTOON. Every part of the site is restyled by hand, from the menus and episode lists to the comments, the reader and the mobile site, and the comic panels stay exactly as the artist drew them: no filter, no colour shift. It adds a night dim for reading in a dark room, which lowers only the panels' brightness.
 
-The two scripts are made to work together and are tested side by side. Prefer an extension? The same theme is available as **Toonlight** for [Chrome, Brave and Opera](https://chromewebstore.google.com/detail/toonlight-dark-mode-for-w/jefblpkbipgmpefdnninpnofkjckpafn), [Edge](https://microsoftedge.microsoft.com/addons/detail/toonlight-dark-mode-for-/iheadalpoiialennkmndleakobiilcfm) and [Firefox](https://addons.mozilla.org/firefox/addon/toonlight/).
+The two scripts are made to work together and are tested side by side. Prefer an extension? The same theme is available as **Toonlight** for [Chrome, Brave and Opera](https://chromewebstore.google.com/detail/toonlight-dark-mode-for-w/jefblpkbipgmpefdnninpnofkjckpafn), [Edge](https://microsoftedge.microsoft.com/addons/detail/toonlight-dark-mode-for-/iheadalpoiialennkmndleakobiilcfm) and [Firefox, including Firefox for Android](https://addons.mozilla.org/firefox/addon/toonlight/).
 
 ## Source and issues
 

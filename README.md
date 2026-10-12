@@ -161,3 +161,5 @@ To test a change, open your userscript manager's dashboard, create a new script,
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+Webtoons Chapter Preloader (Toonlight Preloader) is an independent project and is not affiliated with, endorsed by or sponsored by NAVER WEBTOON. WEBTOON is a trademark of NAVER WEBTOON. The comics in the screenshots belong to their creators.

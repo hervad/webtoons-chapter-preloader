@@ -191,6 +191,21 @@ The partner account is already set up (Toonlight).
 4. **Submit Version.** Publication usually takes up to 24 hours.
 5. **Manage Listing → Edit Product Page → Images:** the icon and the five screenshots with captions.
 
+## Usage numbers
+
+Each store counts something different, so the numbers can't be added up:
+
+| Store | What it counts | Read it |
+| --- | --- | --- |
+| Chrome Web Store | weekly users (browsers that checked for updates that week) | `curl -s https://img.shields.io/chrome-web-store/users/kanadpglihpekgidpopkpblcheoinekh.json \| jq .value` |
+| Edge Add-ons | active installs | `curl -s https://microsoftedge.microsoft.com/addons/getproductdetailsbycrxid/mpgabnfjnfleojaokcojabpcpfnnpgfd \| jq .activeInstallCount` (undocumented, may stop working; shields.io has no Edge badge) |
+| Firefox (AMO) | average daily users | `curl -s https://addons.mozilla.org/api/v5/addons/addon/toonlight-preloader/ \| jq .average_daily_users` |
+| Greasy Fork | total installs ever (never goes down) | `curl -s https://img.shields.io/greasyfork/dt/575967.json \| jq .value` |
+
+The Chrome developer dashboard (**Analytics**) lags by 2–3 days: its **Installs** are clicks on "Add to Chrome" (one person can count twice) and its **Users** are weekly users, the number on the store page. With single-digit numbers, one person swings every chart.
+
+The README shows one count: **Greasy Fork installs** (shields.io `greasyfork/dt`), the largest. Turn a store badge into a count once that store passes about 50; a badge reading 1 or 6 does more harm than good.
+
 ## Each new version
 
 1. Bump `@version` in the userscript (the extension takes it from there), update `CHANGELOG.md`, commit.
